@@ -1,8 +1,8 @@
 # GAIA / GABI 2.0 — Discovery Document
 **Session:** Discovery Room v1 · 2026-04-24
 **Scribe:** Lisa Hayes
-**Version:** 2 (updated post-session with all final decisions)
-**Status:** FINAL — discovery complete, ready for PRD
+**Version:** 3 (all open questions resolved)
+**Status:** CLOSED — discovery complete, all decisions locked, ready for PRD
 
 ---
 
@@ -117,8 +117,9 @@ A closed loop from shelf to compliance report — verifying every product, ensur
 - Expo (React Native) — cross-platform iOS + Android
 - Primary function: QR code scanning (both purchase confirmation and return scan)
 - Secondary function: wallet / rewards points balance and history
-- Farmer-facing scan result: product verification status, product details, remaining formulation months, FPA registration status
-- Authentication: account-based (no anonymous scans)
+- Farmer-facing scan result: product verification status, product details, remaining formulation months, FPA registration status, PHI, re-entry period
+- Authentication: **phone number** (OTP-based, no email/social)
+- **Offline mode: required** — farmers in rural areas may have no connectivity inside stores; scan data must queue locally and sync when signal is restored
 - Dealer requires CRM-connected device at point of sale (confirmed as expected)
 
 ### 5.4 Backend (Supabase)
@@ -309,17 +310,20 @@ Every scan of any type, at any step, always checks:
 
 **Dealer incentive alignment:** dealer's reward only pays when farmer scans. Dealers actively coach farmers through the return scan because they don't get paid until the farmer does. This drives app engagement at return without requiring a separate mechanism.
 
-### Points Structure
-*(Open — see §12 #1)*
+### Points Structure (CONFIRMED)
+- **Model:** Points earned per return event (not per product weight, not per purchase)
+- **Exact point value:** TBD — to be defined in PRD based on business economics
+- Both farmer and dealer earn points on the same return event
 
-### Points Redemption
-*(Open — see §12 #8)*
+### Points Redemption (CONFIRMED)
+- **v1:** Discount vouchers (redeemable at participating dealers)
+- **v2 roadmap:** AI-app store (future phase)
 
 ### Pi Network Integration
-- Deferred. Will be in the architecture but NOT in the v1 demo.
+- Deferred — needs to prove concept first before Pi bridge is built
 - Prototype copy confirmed: *"Pi Network & on-chain traceability — in the architecture, not on the demo."*
 - The rewards system in v1 will use GAIA's own internal points wallet
-- Pi Network bridge is a Phase 2 feature
+- Pi Network bridge is a Phase 3+ feature
 
 ---
 
@@ -370,7 +374,7 @@ These are distinct concepts with different sources, different timelines, and dif
 | RECOMMENDED RATE | `dosage_rate` | |
 | MRL (Proposed) | `mrl` | Maximum Residue Limit |
 | PHI | `pre_harvest_interval` | |
-| RE-ENTRY PERIOD | `re_entry_period` | Should surface on farmer scan alongside PHI |
+| RE-ENTRY PERIOD | `re_entry_period` | **Surfaces on farmer scan alongside PHI — confirmed v1** |
 
 **Import normalization requirement:** The spreadsheet is denormalized. "1st OPTION 25 EC" appears 4 times for 4 crops. Import job must group by `REGISTRATION NO.` and aggregate CROPS into a `product_crops` child table. One `products` row, many `product_crops` rows.
 
@@ -388,11 +392,11 @@ These fields must be sourced via OCR from product label image (primary) or manua
 | Imported by | `imported_by` | No |
 | Timing of application | `timing_of_application` | No |
 | Note to physician / antidote | `note_to_physician` | **YES** |
-| IRAC/FRAC/HRAC group (mode of action) | `mode_of_action_group` | No — manual entry or v2 |
+| IRAC/FRAC/HRAC group (mode of action) | `mode_of_action_group` | No — **manual CRM entry, required v1** |
 
 **Note on `mode_of_entry` vs `mode_of_action_group`:** These are different fields.
 - `mode_of_entry` = the FPA spreadsheet's MODE OF ENTRY column (CONTACT, SYSTEMIC, PRE-EMERGENCE, etc.) — in the spreadsheet, store verbatim
-- `mode_of_action_group` = IRAC/FRAC/HRAC biochemical resistance group classification — NOT in the FPA spreadsheet, requires manual CRM entry or v2
+- `mode_of_action_group` = IRAC/FRAC/HRAC biochemical resistance group classification — NOT in the FPA spreadsheet, **manual CRM entry required, ships in v1**
 
 **Note on `timing_of_application`:** Partially derivable from `mode_of_entry` (PRE-EMERGENCE / POST-EMERGENT). Can be stored separately via OCR or manual entry. Not blocked on v1.
 
@@ -502,22 +506,22 @@ Both paths write to the same `products` table. FPA import covers 16 fields; OCR 
 
 ---
 
-## 12. Open Questions
+## 12. Open Questions — ALL RESOLVED
 
-Questions still requiring Rick's decision before the tech spec can be finalized:
+All open questions answered by Rick on 2026-04-24. No remaining blockers for PRD or tech spec.
 
-| # | Question | Owner | Blocking |
-|---|---|---|---|
-| 1 | What is the points structure for rewards? (points per return, conversion rate, cap) | Rick | Reward feature spec |
-| 2 | What is the farmer mobile app auth model? (phone number / email / social sign-in) | Rick | Mobile app spec |
-| 3 | Is there an offline mode for the farmer mobile app? (low connectivity rural areas) | Rick | Mobile arch decision |
-| 4 | What is the dealer region/territory model? (provincial, municipal, dealer-defined) | Rick | CRM data model |
-| 5 | Pi Network integration — what is the target phase/timeline? | Rick | Roadmap |
-| 6 | What is the points redemption model? (cash out, discount vouchers, in-app store) | Rick | Reward feature spec |
-| 7 | Will GAIA issue QR labels retroactively for products already in the market? | Rick | Rollout strategy |
-| 8 | Who onboards manufacturers — GABS admin manually, or is there a self-serve flow? | Rick | CRM onboarding spec |
-| 9 | Should `re_entry_period` surface on the farmer scan result alongside PHI? | Rick | Mobile UI spec |
-| 10 | Is `mode_of_action_group` (IRAC/FRAC/HRAC) required for v1 or deferred to v2? | Rick | Product schema |
+| # | Question | Answer (Rick, 2026-04-24) |
+|---|---|---|
+| 1 | Points structure for rewards? | Points per return event. Exact value TBD in PRD. |
+| 2 | Farmer mobile app auth model? | Phone number (OTP) |
+| 3 | Offline mode for farmer mobile app? | Required — must have offline mode |
+| 4 | Dealer region/territory model? | Dealer-defined territories |
+| 5 | Pi Network integration timeline? | Delayed — prove concept first (Phase 3+) |
+| 6 | Points redemption model? | v1: Discount vouchers. Future: AI-app store |
+| 7 | Retroactive QR labels for existing products? | New production batches: YES. Shelf stock: NO (no retrofitting) |
+| 8 | Who onboards manufacturers? | GAIA staff only — no self-serve |
+| 9 | Surface re_entry_period on farmer scan? | Yes — v1 |
+| 10 | mode_of_action_group (IRAC/FRAC/HRAC) in v1 or v2? | v1 — manual CRM entry required |
 
 ---
 
@@ -544,11 +548,11 @@ Questions still requiring Rick's decision before the tech spec can be finalized:
 | Pi Network integration | Architecture-ready but not in demo — Phase 2 |
 | On-chain / blockchain traceability | Same — Phase 2 |
 | Live FPA API integration | FPA doesn't expose a live API |
-| Offline-first mobile scanning | Decision pending (see §12 #3) |
-| Manufacturer self-serve onboarding | Decision pending (see §12 #8) |
+| Manufacturer self-serve onboarding | GAIA staff handles onboarding — no self-serve portal |
 | SMS-based alerts | Not discussed, not in scope |
 | Consumer web scan (non-app) | Mobile app is the scan surface |
-| IRAC/FRAC/HRAC group auto-import | Not in FPA spreadsheet — manual CRM entry when needed |
+| IRAC/FRAC/HRAC group auto-import | Not in FPA spreadsheet — manual CRM entry in v1 |
+| Shelf stock QR retrofitting | Existing products on shelves do not receive QR stickers — new production batches only |
 | Rewards retry after window expiry | No retry path by design; expired = no reward |
 
 ---
@@ -619,21 +623,30 @@ This section will remain in the informational website to signal technical credib
 | 37 | Dealer requires CRM-connected device at point of sale | Rick (expected) |
 | 38 | product_crops normalized as child table (one product, many crop rows) — import groups by REGISTRATION NO. | Lisa |
 | 39 | EXPIRY DATE in FPA spreadsheet stored as Excel date serial — requires conversion during import | Lisa |
+| 40 | Farmer mobile app auth: phone number (OTP) | Rick |
+| 41 | Offline mode required for farmer mobile app | Rick |
+| 42 | Dealer territories: dealer-defined (not provincial or municipal boundaries) | Rick |
+| 43 | Pi Network: delayed further — must prove concept before bridge is built | Rick |
+| 44 | Points redemption v1: discount vouchers. Future: AI-app store | Rick |
+| 45 | Retroactive QR: new production batches only; no retrofitting of existing shelf stock | Rick |
+| 46 | Manufacturer onboarding: GAIA staff only, no self-serve portal | Rick |
+| 47 | re_entry_period surfaces on farmer scan result alongside PHI — v1 | Rick |
+| 48 | mode_of_action_group (IRAC/FRAC/HRAC): required in v1, manual CRM entry | Rick |
 
 ---
 
 ## 17. Next Steps
 
-1. **PRD** — Write full PRD for GAIA v1 covering all 4 surfaces (discovery complete)
-2. **Tech Spec** — Database schema (products + product_crops + containers + scan_attempts + pending tables), API spec, state machine implementation
-3. **Resolve Open Questions** — Rick to answer items in §12 before tech spec is finalized (especially points structure, auth model, territory model)
-4. **Design Brief** — Handoff to design: confirm palette, typography, component library from Lovable prototype
-5. **FPA Import Script** — Write import job with denormalization + Excel date conversion (spreadsheet in hand)
-6. **QR Label Design** — Finalize label template (GABI branding + product fields + QR + UUID human-readable)
-7. **OCR Integration** — Select vision LLM (Gemini vs Claude) for label field extraction, build review UI
+1. **PRD** — Write full PRD for GAIA v1 covering all 4 surfaces — discovery is closed, no blockers
+2. **Tech Spec** — Database schema (products + product_crops + containers + scan_attempts + pending_purchase + pending_return_reward tables), API spec, state machine, offline sync architecture
+3. **Design Brief** — Handoff to design: confirm palette, typography, component library from Lovable prototype
+4. **FPA Import Script** — Write import job with denormalization + Excel date conversion (spreadsheet in hand)
+5. **QR Label Design** — Finalize label template (GABI branding + product fields + QR + UUID human-readable)
+6. **OCR Integration** — Select vision LLM (Gemini vs Claude) for label field extraction, build review UI
+7. **Points Economics** — Define exact point value per return before PRD is finalized
 
 ---
 
 *Document compiled by Lisa Hayes — GAIA Discovery Session, 2026-04-24*
-*Updated v2 post-session with all final decisions, full scan flow, product schema, and FPA spreadsheet analysis*
+*v3: All open questions resolved. 48 decisions locked. Discovery closed.*
 *Source: Macross discovery room transcripts + FPA spreadsheet review (UPDATED-LIST-OF-REGISTERED-PRODUCTS-As-of-April-1-2026-PMID.xlsx)*
