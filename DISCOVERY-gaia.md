@@ -635,7 +635,7 @@ This section will remain in the informational website to signal technical credib
 | 49 | Offline sync: window eligibility measured by device's `local_scan_ts`, not server receive time | Tony Stark |
 | 50 | Offline trust model: accept late sync if (a) local_scan_ts within pending window AND (b) sync within 7-day hard cap AND (c) local_scan_ts ≥ device.last_online_ts | Tony Stark |
 | 51 | Syncs with >5 min delay flagged `sync_delayed=true` on scan_attempts — available for audit/fraud review | Tony Stark |
-| 52 | Late farmer sync after pending_purchase expiry: accept in v1 (resurrect/close pending record using local_ts) — simplicity over strictness at MVP | Tony Stark |
+| 52 | Late farmer sync after pending_purchase expiry: accept in v1 IF container state is still unclaimed (state IN ('in_distribution','pending_purchase') AND purchased_by_user_id IS NULL). The `pending_purchase` record is NOT resurrected — the window check loosens, not the record. If another farmer already claimed, return 409 ALREADY_CLAIMED. Atomic UPDATE via RETURNING guards the race. | Tony Stark |
 | 53 | Dealer scan at return fires compliance immediately (no offline queue for compliance event) — dealers at POS have reliable connectivity | Tony Stark |
 
 **scan_attempts schema additions (from offline sync spec):**
