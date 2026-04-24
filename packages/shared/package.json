@@ -10,7 +10,7 @@
     "./i18n": "./dist/i18n/index.js",
     "./schemas": "./dist/schemas/index.js",
     "./constants": "./dist/constants/index.js",
-    "./scan-result": "./dist/components/scan-result/index.js"
+    "./adapters": "./dist/adapters/index.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
@@ -18,14 +18,5 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
-  },
-  "peerDependencies": {
-    "react": "^18.2.0 || ^19.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react": { "optional": false }
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.0"
   }
 }
