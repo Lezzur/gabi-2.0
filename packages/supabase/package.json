@@ -1,0 +1,16 @@
+{
+  "name": "@gaia/supabase",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": "./dist/index.js",
+    "./types": "./dist/types/database.types.js"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  }
+}
