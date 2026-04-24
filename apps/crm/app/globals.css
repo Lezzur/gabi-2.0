@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn/ui CSS variables — mapped from GAIA design tokens (HSL, no hsl() wrapper) */
+
+    /* Backgrounds */
+    --background: 43 59% 90%;          /* surface.bg  #F5EDD8 cream */
+    --foreground: 0 0% 10%;            /* text.primary #1A1A1A */
+
+    --card: 46 48% 87%;                /* surface.card #EDE5CC cream-deep */
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;              /* surface.white */
+    --popover-foreground: 0 0% 10%;
+
+    /* Brand — forest green primary */
+    --primary: 154 40% 17%;            /* brand.primary #1A3D2E */
+    --primary-foreground: 43 59% 90%;  /* surface.bg (cream on green) */
+
+    --secondary: 46 48% 87%;           /* surface.card */
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 46 48% 87%;
+    --muted-foreground: 0 0% 35%;      /* text.secondary #5A5A5A */
+
+    /* Brand — gold accent */
+    --accent: 41 65% 48%;              /* brand.accent #C8952A */
+    --accent-foreground: 0 0% 100%;    /* white on gold */
+
+    --destructive: 0 74% 42%;          /* state.error #B91C1C */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 36 24% 84%;              /* surface.border #E0D8CC */
+    --input: 36 24% 84%;
+    --ring: 154 40% 17%;               /* brand.primary */
+
+    --radius: 0.5rem;                  /* radii.md = 8px */
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  }
+}
