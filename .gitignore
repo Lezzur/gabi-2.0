@@ -2,9 +2,12 @@ node_modules/
 dist/
 .env*
 !.env.example
+!.env.test
 .turbo/
 .next/
 .expo/
 .barker/
 worktrees/
 coverage/
+playwright-report/
+test-results/

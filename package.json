@@ -8,10 +8,14 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "test:watch": "vitest",
+    "test:e2e": "turbo run test:e2e"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^2.1.0",
     "turbo": "^2.3.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "vitest": "^2.1.0"
   }
 }
