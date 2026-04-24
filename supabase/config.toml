@@ -1,0 +1,28 @@
+# =============================================================================
+# supabase/config.toml — Local Supabase stack configuration.
+#
+# Scope for Phase 2: registers the custom access token hook defined in
+# 0004_auth_hook.sql so `supabase start` / `supabase db reset` pick it up.
+# The full auth section (providers, SMS, MFA, redirect URLs) is layered in
+# by later phases.
+# =============================================================================
+
+project_id = "gaia"
+
+[auth]
+# Required parent block so [auth.hook.*] children resolve.
+enabled = true
+
+# -----------------------------------------------------------------------------
+# Custom access token hook — per PRD §Phase 2 item 2.1.5
+# -----------------------------------------------------------------------------
+# GoTrue invokes this Postgres function on every access-token issuance /
+# refresh. It merges user_role, locale, dealer_id, and manufacturer_id into
+# the JWT claims so RLS policies (0003_rls.sql) can check role membership
+# without hitting user_profiles on every request.
+#
+# URI scheme: pg-functions://<db-name>/<schema>/<function-name>
+# `postgres` is the default DB on a local Supabase stack.
+[auth.hook.custom_access_token]
+enabled = true
+uri = "pg-functions://postgres/public/gaia_custom_access_token_hook"
