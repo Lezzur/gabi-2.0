@@ -10,7 +10,8 @@
     "./i18n": "./dist/i18n/index.js",
     "./schemas": "./dist/schemas/index.js",
     "./constants": "./dist/constants/index.js",
-    "./adapters": "./dist/adapters/index.js"
+    "./adapters": "./dist/adapters/index.js",
+    "./components/scan-result": "./dist/components/scan-result/index.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",

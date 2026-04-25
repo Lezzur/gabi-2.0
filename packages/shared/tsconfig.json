@@ -4,5 +4,5 @@
   "compilerOptions": {
     "outDir": "./dist"
   },
-  "include": ["types/**/*", "tokens/**/*", "i18n/**/*", "schemas/**/*", "constants/**/*", "adapters/**/*"]
+  "include": ["types/**/*", "tokens/**/*", "i18n/**/*", "schemas/**/*", "constants/**/*", "adapters/**/*", "components/**/*"]
 }
