@@ -5,10 +5,27 @@ on:
   push:
     branches: [main]
 
+# Cancel in-progress runs on the same branch (but never on main)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+# Least-privilege defaults; jobs that need more declare it explicitly
+permissions:
+  contents: read
+
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+
 jobs:
-  test:
-    name: Unit tests
+  # ── Lint / Typecheck / Build / Unit-Test ──────────────────────────────────
+  checks:
+    name: Lint / Typecheck / Build / Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write  # needed to post coverage comments
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,11 +35,69 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc  # pins to the version in .nvmrc (currently 20)
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: pnpm run test
+      - name: Lint + Typecheck + Build
+        run: pnpm turbo run lint typecheck build
+
+      - name: Test (vitest)
+        run: pnpm turbo run test
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          # Explicit list — avoids accidentally picking up stale files
+          files: >-
+            packages/shared/coverage/lcov.info,
+            packages/supabase/coverage/lcov.info,
+            apps/crm/coverage/lcov.info,
+            apps/website/coverage/lcov.info
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  # ── CRM Playwright Smoke Tests ────────────────────────────────────────────
+  e2e:
+    name: E2E — CRM (Playwright)
+    runs-on: ubuntu-latest
+    needs: checks  # only run when lint/build/unit-tests all pass
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Install only the Chromium browser (matches playwright.config.ts projects list)
+      - name: Install Playwright browsers
+        run: pnpm --filter @gaia/crm exec playwright install --with-deps chromium
+
+      - name: Run CRM smoke tests
+        run: pnpm turbo run test:e2e
+        env:
+          # Secrets injected here — never echoed or written to disk
+          BASE_URL: http://localhost:3001
+          SUPABASE_URL_TEST: ${{ secrets.SUPABASE_URL_TEST }}
+          SUPABASE_ANON_KEY_TEST: ${{ secrets.SUPABASE_ANON_KEY_TEST }}
+
+      # Always upload the report so failures are diagnosable; skip only if the
+      # job itself was cancelled mid-run (e.g. by the concurrency cancel above)
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: apps/crm/playwright-report/
+          retention-days: 7
