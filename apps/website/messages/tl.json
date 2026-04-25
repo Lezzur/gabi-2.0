@@ -1,0 +1,83 @@
+{
+  "nav": {
+    "home": "Home",
+    "how_it_works": "Paano Ito Gumagana",
+    "for_brands": "Para sa mga Brand",
+    "for_dealers": "Para sa mga Dealer",
+    "contact": "Makipag-ugnayan",
+    "open_demo": "Buksan ang Demo",
+    "open_menu": "Buksan ang menu",
+    "close_menu": "Isara ang menu",
+    "language": "Wika"
+  },
+  "home": {
+    "hero": {
+      "headline": "Tunay na inputs. Ginagantimpalaan na magsasaka. Audit-ready na pangangasiwa.",
+      "subheadline": "Ikinokonekta ng GAIA ang mga magsasaka, dealer, at brand sa pamamagitan ng QR-verified na traceability ng agrochemical, pagsunod sa EPR, at mga natamong gantimpala.",
+      "cta_demo": "Buksan ang Demo",
+      "cta_talk": "Makipag-usap sa team"
+    },
+    "lifecycle": {
+      "heading": "Mula sa istante hanggang sa pagsunod — awtomatiko.",
+      "verify": {
+        "title": "I-verify ang mga Produkto",
+        "description": "Ang mga magsasaka ay nag-scan ng QR codes sa pagbili upang ma-verify ang pagpaparehistro ng FPA at kasariwaan ng pormula."
+      },
+      "earn": {
+        "title": "Kumita ng Gantimpala",
+        "description": "Ibalik ang mga walang laman na lalagyan upang kumita ng mga puntos na maaaring i-redeem para sa mga discount voucher sa mga kaalyansang dealer."
+      },
+      "return": {
+        "title": "Ibalik ang Lalagyan",
+        "description": "Pinoproseso ng mga dealer ang pagbabalik ng lalagyan, kumpirmahin ang ligtas na pagtatapon at pag-trigger ng mga kaganapan ng pagsunod sa EPR."
+      },
+      "audit": {
+        "title": "Audit-Ready na Pag-uulat",
+        "description": "Bawat scan ay sumusulat ng forensic na talaan. Ang mga ulat ng pagsunod ay nag-export sa isang click."
+      }
+    },
+    "roles": {
+      "heading": "Ginawa para sa bawat stakeholder.",
+      "farmer": {
+        "title": "Magsasaka",
+        "description": "I-verify ang binibili mo, subaybayan ang iyong mga lalagyan, kumita ng gantimpala para sa responsableng pagtatapon."
+      },
+      "regulator": {
+        "title": "Regulator",
+        "description": "I-access ang audit-ready na data ng pagsunod. Bawat kaganapan ng EPR ay naka-log at nai-export."
+      },
+      "brand": {
+        "title": "Brand / Tagagawa",
+        "description": "Makakuha ng pamamahala ng pagpaparehistro ng FPA, paglikha ng label, at totoong analytics ng rate ng pagbabalik."
+      },
+      "admin": {
+        "title": "GABS Admin",
+        "description": "Buong kontrol sa platform — pag-activate ng produkto, pag-onboard ng dealer, pamamahala ng wallet, configuration ng sistema."
+      }
+    },
+    "stats": {
+      "products": "31,990+ na produktong nakatala sa FPA",
+      "window": "60-minutong window ng pagbili",
+      "audit": "100% audit trail"
+    },
+    "pi": {
+      "heading": "Pi Network at on-chain traceability — nasa arkitektura, hindi sa demo.",
+      "badge": "Darating sa Phase 3"
+    }
+  },
+  "footer": {
+    "copyright": "Lahat ng karapatan ay nakalaan."
+  },
+  "contact": {
+    "title": "Makipag-ugnayan",
+    "name_label": "Pangalan",
+    "company_label": "Kumpanya",
+    "role_label": "Tungkulin",
+    "message_label": "Mensahe",
+    "submit": "Magpadala ng mensahe",
+    "submitting": "Nagpapadala…",
+    "success": "Makikipag-ugnayan kami sa iyo.",
+    "error": "May naganap na error — subukan muli.",
+    "rate_limited": "Napakaraming kahilingan. Mangyaring maghintay bago magpadala muli."
+  }
+}

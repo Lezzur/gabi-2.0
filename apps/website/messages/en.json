@@ -1,0 +1,83 @@
+{
+  "nav": {
+    "home": "Home",
+    "how_it_works": "How It Works",
+    "for_brands": "For Brands",
+    "for_dealers": "For Dealers",
+    "contact": "Contact",
+    "open_demo": "Open Demo",
+    "open_menu": "Open menu",
+    "close_menu": "Close menu",
+    "language": "Language"
+  },
+  "home": {
+    "hero": {
+      "headline": "Authentic inputs. Rewarded farmers. Audit-ready stewardship.",
+      "subheadline": "GAIA connects farmers, dealers, and brands through QR-verified agrochemical traceability, EPR compliance, and earned rewards.",
+      "cta_demo": "Open Demo",
+      "cta_talk": "Talk to the team"
+    },
+    "lifecycle": {
+      "heading": "From shelf to compliance — automatically.",
+      "verify": {
+        "title": "Verify Products",
+        "description": "Farmers scan QR codes at purchase to verify FPA registration and formulation freshness."
+      },
+      "earn": {
+        "title": "Earn Rewards",
+        "description": "Return empty containers to earn points redeemable for discount vouchers at partnered dealers."
+      },
+      "return": {
+        "title": "Return Container",
+        "description": "Dealers process container returns, confirming safe disposal and triggering EPR compliance events."
+      },
+      "audit": {
+        "title": "Audit-Ready Reporting",
+        "description": "Every scan writes a forensic record. Compliance reports export in one click."
+      }
+    },
+    "roles": {
+      "heading": "Built for every stakeholder.",
+      "farmer": {
+        "title": "Farmer",
+        "description": "Verify what you're buying, track your containers, earn rewards for responsible disposal."
+      },
+      "regulator": {
+        "title": "Regulator",
+        "description": "Access audit-ready compliance data. Every EPR event is logged and exportable."
+      },
+      "brand": {
+        "title": "Brand / Manufacturer",
+        "description": "Get FPA registration management, label generation, and real return-rate analytics."
+      },
+      "admin": {
+        "title": "GABS Admin",
+        "description": "Full platform control — product activation, dealer onboarding, wallet management, system configuration."
+      }
+    },
+    "stats": {
+      "products": "31,990+ FPA-registered products",
+      "window": "60-minute purchase window",
+      "audit": "100% audit trail"
+    },
+    "pi": {
+      "heading": "Pi Network & on-chain traceability — in the architecture, not on the demo.",
+      "badge": "Coming in Phase 3"
+    }
+  },
+  "footer": {
+    "copyright": "All rights reserved."
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "name_label": "Name",
+    "company_label": "Company",
+    "role_label": "Role",
+    "message_label": "Message",
+    "submit": "Send message",
+    "submitting": "Sending…",
+    "success": "We'll be in touch.",
+    "error": "Something went wrong — try again.",
+    "rate_limited": "Too many requests. Please wait before sending again."
+  }
+}
