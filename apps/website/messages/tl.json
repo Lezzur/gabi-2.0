@@ -56,12 +56,22 @@
       }
     },
     "stats": {
-      "products": "31,990+ na produktong nakatala sa FPA",
-      "window": "60-minutong window ng pagbili",
-      "audit": "100% audit trail"
+      "products": {
+        "number": "31,990+",
+        "label": "na produktong nakatala sa FPA"
+      },
+      "window": {
+        "number": "60 min",
+        "label": "window ng pagbili"
+      },
+      "audit": {
+        "number": "100%",
+        "label": "audit trail"
+      }
     },
     "pi": {
       "heading": "Pi Network at on-chain traceability — nasa arkitektura, hindi sa demo.",
+      "body": "Kasama sa roadmap ng Phase 3 ng GAIA ang integrasyon ng Pi Network para sa on-chain na pag-verify ng bawat scan, pagbabalik ng lalagyan, at kaganapan ng EPR. Ang mga hindi mababago na rekord ay nagbibigay sa mga regulator at brand ng tamper-proof na audit trail na hindi kayang gawin ng anumang sentralisadong database.",
       "badge": "Darating sa Phase 3"
     }
   },

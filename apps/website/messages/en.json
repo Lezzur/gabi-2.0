@@ -56,12 +56,22 @@
       }
     },
     "stats": {
-      "products": "31,990+ FPA-registered products",
-      "window": "60-minute purchase window",
-      "audit": "100% audit trail"
+      "products": {
+        "number": "31,990+",
+        "label": "FPA-registered products"
+      },
+      "window": {
+        "number": "60 min",
+        "label": "Purchase window"
+      },
+      "audit": {
+        "number": "100%",
+        "label": "Audit trail"
+      }
     },
     "pi": {
       "heading": "Pi Network & on-chain traceability — in the architecture, not on the demo.",
+      "body": "GAIA's Phase 3 roadmap includes Pi Network integration for on-chain verification of every scan, container return, and EPR event. Immutable records give regulators and brands a tamper-proof audit trail that no centralized database can replicate.",
       "badge": "Coming in Phase 3"
     }
   },
