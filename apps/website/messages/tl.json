@@ -81,6 +81,9 @@
   "contact": {
     "title": "Makipag-ugnayan",
     "name_label": "Pangalan",
+    "email_label": "Email",
+    "phone_label": "Telepono (opsyonal)",
+    "topic_label": "Paksa",
     "company_label": "Kumpanya",
     "role_label": "Tungkulin",
     "message_label": "Mensahe",
@@ -88,6 +91,11 @@
     "submitting": "Nagpapadala…",
     "success": "Makikipag-ugnayan kami sa iyo.",
     "error": "May naganap na error — subukan muli.",
-    "rate_limited": "Napakaraming kahilingan. Mangyaring maghintay bago magpadala muli."
+    "rate_limited": "Napakaraming kahilingan. Mangyaring maghintay bago magpadala muli.",
+    "captcha_failed": "Kumpletuhin ang security check.",
+    "topic_general": "Pangkalahatan",
+    "topic_dealer_inquiry": "Katanungan ng Dealer",
+    "topic_report_counterfeit": "Iulat ang Peke",
+    "topic_other": "Iba pa"
   }
 }

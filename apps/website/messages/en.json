@@ -81,6 +81,9 @@
   "contact": {
     "title": "Get in Touch",
     "name_label": "Name",
+    "email_label": "Email",
+    "phone_label": "Phone (optional)",
+    "topic_label": "Topic",
     "company_label": "Company",
     "role_label": "Role",
     "message_label": "Message",
@@ -88,6 +91,11 @@
     "submitting": "Sending…",
     "success": "We'll be in touch.",
     "error": "Something went wrong — try again.",
-    "rate_limited": "Too many requests. Please wait before sending again."
+    "rate_limited": "Too many requests. Please wait before sending again.",
+    "captcha_failed": "Please complete the security check.",
+    "topic_general": "General",
+    "topic_dealer_inquiry": "Dealer Inquiry",
+    "topic_report_counterfeit": "Report Counterfeit",
+    "topic_other": "Other"
   }
 }
