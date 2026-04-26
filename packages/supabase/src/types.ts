@@ -14,6 +14,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      config_audit_log: {
+        Row: {
+          id: string
+          table_name: string
+          changed_by: string
+          before: Record<string, unknown> | null
+          after: Record<string, unknown>
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          table_name: string
+          changed_by: string
+          before?: Record<string, unknown> | null
+          after: Record<string, unknown>
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          table_name?: string
+          changed_by?: string
+          before?: Record<string, unknown> | null
+          after?: Record<string, unknown>
+          created_at?: string
+        }
+        Relationships: []
+      }
       containers: {
         Row: {
           id: string
