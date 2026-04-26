@@ -1,11 +1,30 @@
-import { loginAction } from './actions'
+'use client'
+
+import { useFormState, useFormStatus } from 'react-dom'
+import { loginAction, type LoginState } from './actions'
 
 interface PageProps {
   searchParams: { next?: string }
 }
 
+const initialState: LoginState = {}
+
+function SubmitButton() {
+  const { pending } = useFormStatus()
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      {pending ? 'Signing in…' : 'Sign in'}
+    </button>
+  )
+}
+
 export default function LoginPage({ searchParams }: PageProps) {
   const next = searchParams.next ?? '/'
+  const [state, formAction] = useFormState(loginAction, initialState)
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
@@ -15,7 +34,7 @@ export default function LoginPage({ searchParams }: PageProps) {
           <p className="mt-1 text-sm text-gray-500">Sign in to your account</p>
         </div>
 
-        <form action={loginAction} className="space-y-4">
+        <form action={formAction} className="space-y-4">
           <input type="hidden" name="next" value={next} />
 
           <div className="space-y-1">
@@ -47,12 +66,16 @@ export default function LoginPage({ searchParams }: PageProps) {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-          >
-            Sign in
-          </button>
+          {state.error ? (
+            <div
+              role="alert"
+              className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+            >
+              {state.error}
+            </div>
+          ) : null}
+
+          <SubmitButton />
         </form>
       </div>
     </main>
