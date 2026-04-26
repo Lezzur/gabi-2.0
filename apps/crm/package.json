@@ -11,8 +11,10 @@
     "generate-theme": "tsx scripts/generate-theme.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
     "@gaia/shared": "workspace:*",
     "@gaia/supabase": "workspace:*",
+    "@google/generative-ai": "^0.21.0",
     "exceljs": "^4.4.0",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
