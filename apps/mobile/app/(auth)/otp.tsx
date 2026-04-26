@@ -23,7 +23,9 @@ export default function OtpScreen() {
   const [obscured, setObscured] = useState(false)
   const inputRef = useRef<TextInput>(null)
 
-  // Hide OTP in app switcher (iOS privacy)
+  // Hide OTP in app switcher (iOS privacy). The `inactive` state fires before
+  // iOS captures the snapshot for the app switcher, so flipping to obscured
+  // here keeps the digits out of the screenshot.
   useEffect(() => {
     const sub = AppState.addEventListener('change', (state) => {
       setObscured(state !== 'active')
@@ -63,8 +65,14 @@ export default function OtpScreen() {
 
   async function handleResend() {
     if (countdown > 0) return
+    const { error } = await sendOtp(phone)
+    if (error) {
+      Alert.alert('Could not resend code', error)
+      return
+    }
     setCountdown(RESEND_SECONDS)
-    await sendOtp(phone)
+    setCode('')
+    inputRef.current?.focus()
   }
 
   return (

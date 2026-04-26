@@ -10,29 +10,33 @@ import {
   Platform,
 } from 'react-native'
 import { useRouter } from 'expo-router'
-import { sendOtp, formatPhPhone } from '../../lib/auth'
+import { sendOtp, validatePhPhone } from '../../lib/auth'
 
 const PREFIX = '+63'
+const LOCAL_LENGTH = 10
 
 export default function PhoneScreen() {
   const router = useRouter()
   const [local, setLocal] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // local holds digits after +63 prefix
   const phone = `${PREFIX}${local}`
+  const valid = validatePhPhone(phone)
 
   async function handleSend() {
-    const formatted = formatPhPhone(phone)
-    setLoading(true)
-    const { error } = await sendOtp(formatted)
-    setLoading(false)
-    if (error) {
-      Alert.alert('Error', error)
+    if (!valid) {
+      Alert.alert('Invalid number', 'Enter a 10-digit mobile number starting with 9.')
       return
     }
-    // Always show success to prevent phone number enumeration
-    router.push({ pathname: '/(auth)/otp', params: { phone: formatted } })
+    setLoading(true)
+    const { error } = await sendOtp(phone)
+    setLoading(false)
+    if (error) {
+      Alert.alert('Could not send code', error)
+      return
+    }
+    // Generic success message — never reveal whether the number is registered.
+    router.push({ pathname: '/(auth)/otp', params: { phone } })
   }
 
   return (
@@ -51,18 +55,19 @@ export default function PhoneScreen() {
           <TextInput
             style={styles.input}
             value={local}
-            onChangeText={(t) => setLocal(t.replace(/\D/g, '').slice(0, 10))}
+            onChangeText={(t) => setLocal(t.replace(/\D/g, '').slice(0, LOCAL_LENGTH))}
             keyboardType="number-pad"
             placeholder="9XX XXX XXXX"
-            maxLength={10}
+            maxLength={LOCAL_LENGTH}
             autoFocus
+            textContentType="telephoneNumber"
           />
         </View>
 
         <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
+          style={[styles.button, (!valid || loading) && styles.buttonDisabled]}
           onPress={handleSend}
-          disabled={loading || local.length < 10}
+          disabled={loading || !valid}
         >
           <Text style={styles.buttonText}>{loading ? 'Sending…' : 'Send code'}</Text>
         </TouchableOpacity>

@@ -1,5 +1,4 @@
-import * as SecureStore from 'expo-secure-store'
-import { createBrowserClient } from '@gaia/supabase'
+import { supabase } from './supabase'
 
 const PH_E164 = /^\+639\d{9}$/
 
@@ -8,26 +7,33 @@ export function validatePhPhone(phone: string): boolean {
 }
 
 export function formatPhPhone(raw: string): string {
-  // Normalise: strip spaces/dashes, ensure +63 prefix
   const digits = raw.replace(/\D/g, '')
   if (digits.startsWith('63')) return `+${digits}`
   if (digits.startsWith('0')) return `+63${digits.slice(1)}`
   return `+63${digits}`
 }
 
-export async function sendOtp(phone: string): Promise<{ error: string | null }> {
+export type SendOtpResult = { error: string | null }
+
+export async function sendOtp(phone: string): Promise<SendOtpResult> {
   if (!validatePhPhone(phone)) {
-    return { error: 'Invalid Philippine phone number.' }
+    return { error: 'Please enter a valid Philippine mobile number.' }
   }
-  const supabase = createBrowserClient()
+
   const { error } = await supabase.auth.signInWithOtp({ phone })
-  // Never reveal whether the number is registered
-  if (error && !error.message.includes('rate')) {
-    return { error: null }
+
+  if (!error) return { error: null }
+
+  // Surface rate-limit errors so the user understands the throttle.
+  // Server-side: Supabase Auth enforces OTP rate limits per phone
+  // (configured to 3 requests / 5 minutes, matching the p5 rate-limit policy).
+  const status = (error as { status?: number }).status
+  if (status === 429 || /rate|too many|limit/i.test(error.message)) {
+    return { error: 'Too many requests. Please wait a few minutes before trying again.' }
   }
-  if (error) {
-    return { error: 'Too many requests. Please wait before trying again.' }
-  }
+
+  // For all other errors (including "user not found" / unregistered numbers),
+  // return success to prevent phone-number enumeration.
   return { error: null }
 }
 
@@ -35,7 +41,6 @@ export async function verifyOtp(
   phone: string,
   code: string,
 ): Promise<{ error: string | null }> {
-  const supabase = createBrowserClient()
   const { data, error } = await supabase.auth.verifyOtp({
     phone,
     token: code,
@@ -44,15 +49,9 @@ export async function verifyOtp(
   if (error || !data.session) {
     return { error: 'Invalid or expired code.' }
   }
-  // Persist tokens in SecureStore (hardware-backed where available)
-  await SecureStore.setItemAsync('sb_access_token', data.session.access_token)
-  await SecureStore.setItemAsync('sb_refresh_token', data.session.refresh_token)
   return { error: null }
 }
 
 export async function signOut(): Promise<void> {
-  const supabase = createBrowserClient()
   await supabase.auth.signOut()
-  await SecureStore.deleteItemAsync('sb_access_token')
-  await SecureStore.deleteItemAsync('sb_refresh_token')
 }
