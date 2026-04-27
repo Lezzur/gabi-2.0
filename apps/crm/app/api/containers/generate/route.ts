@@ -102,6 +102,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       product_id: body.product_id,
       hmac,
       hmac_suffix: hmacSuffix,
+      // batch_number stores the batch UUID so export-labels can query by it.
+      // The (product_id, batch_number) composite index covers this lookup.
+      batch_number: batchId,
       dealer_id: body.assigned_dealer_id ?? null,
     }
   })
