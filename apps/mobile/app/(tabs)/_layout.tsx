@@ -13,7 +13,13 @@ export default function TabsLayout() {
         headerTitleStyle: { fontWeight: '600' },
       }}
     >
-      <Tabs.Screen name="history" options={{ title: 'History' }} />
+      <Tabs.Screen
+        name="scan"
+        options={{
+          title: 'Scan',
+          headerShown: false,
+        }}
+      />
       <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
     </Tabs>
   )
