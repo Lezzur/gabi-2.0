@@ -1162,6 +1162,12 @@ phases:
           - alias: "ui-design"
             sections: ["C1", "Data Tables (CRM)", "Status Badges"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Build `apps/crm/app/(dashboard)/products/page.tsx` — the Products list page.
 
           - Server component fetches first page via the supabase server client
@@ -1194,6 +1200,12 @@ phases:
           - alias: "api-spec"
             sections: ["7.2", "7.3"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Build `apps/crm/app/(dashboard)/products/[id]/page.tsx` — product detail + inline edit.
 
           - Read-only fields: fpa_registration, manufacture_date, formulation_expires_at (generated)
@@ -1223,6 +1235,12 @@ phases:
           - alias: "prd"
             sections: ["Phase 4"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Build `apps/crm/app/(dashboard)/import-fpa/page.tsx` — upload + results preview page.
 
           - File input (accept .xlsx); client-side size check (5MB)
@@ -1250,6 +1268,12 @@ phases:
           - alias: "prd"
             sections: ["Phase 5"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Build the three-step OCR flow at `apps/crm/app/(dashboard)/products/new/ocr/`.
 
           - step-1 (upload): `page.tsx` — image uploader, POST /api/products/ocr, poll job status
@@ -1287,6 +1311,12 @@ phases:
           - alias: "api-spec"
             sections: ["8.1", "8.3", "8.4"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Build `apps/crm/app/(dashboard)/containers/page.tsx` with:
           - Filterable list (state, product, dealer, batch)
           - "Generate Batch" button opens a dialog (product selector, quantity, dealer assignment)
@@ -1345,6 +1375,12 @@ phases:
           - alias: "api-spec"
             sections: ["9.1", "9.2", "9.3", "9.4"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Build `apps/crm/app/(dashboard)/dealers/page.tsx` (list + search),
           `apps/crm/app/(dashboard)/dealers/[id]/page.tsx` (detail + verify action),
           and `apps/crm/app/(dashboard)/dealers/invite/page.tsx` (invite form).
@@ -1373,6 +1409,12 @@ phases:
           - alias: "api-spec"
             sections: ["10.4", "12"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Build admin wallet + reward config pages.
 
           - `apps/crm/app/(dashboard)/wallets/page.tsx` — list wallets with user search, balance, last activity
@@ -1671,6 +1713,12 @@ phases:
           - alias: "api-spec"
             sections: ["10.1", "10.2", "10.3"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Build `apps/mobile/app/(tabs)/wallet.tsx` — balance + recent transactions + redeem voucher CTA.
 
           - Balance card (shows balance_points, formatted as locale-aware number)
@@ -1896,6 +1944,12 @@ phases:
           - alias: "tech-spec"
             sections: ["4.4", "6"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Write unit tests for the scan-critical utilities.
 
           Coverage:
@@ -1924,6 +1978,12 @@ phases:
           - alias: "tech-spec"
             sections: ["6"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Write RLS policy tests at `supabase/tests/rls-policies.test.sql`.
 
           Scenarios:
@@ -1951,6 +2011,12 @@ phases:
           - alias: "prd"
             sections: ["Phase 3", "Phase 7"]
         prompt: |
+          RESUME CHECK: run this first, before writing anything:
+          For each file listed in expected_files, check if it already exists and is non-empty.
+          Skip any file that already exists -- do not overwrite it.
+          Only create files that are genuinely missing or empty.
+          This lets a retry after a crash continue from where the previous run left off.
+
           Write `apps/crm/e2e/scan-flow.spec.ts` — full Playwright flow.
 
           Scenarios:
