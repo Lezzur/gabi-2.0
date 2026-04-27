@@ -135,6 +135,21 @@
       "company": "Company"
     }
   },
+  "profile": {
+    "title": "Profile",
+    "phone_label": "Mobile Number",
+    "locale_label": "Language",
+    "locale_en": "English",
+    "locale_tl": "Filipino",
+    "version_label": "Version",
+    "build_label": "Build",
+    "sign_out": "Sign Out",
+    "sign_out_confirm_title": "Sign Out",
+    "sign_out_confirm_body": "Are you sure you want to sign out?",
+    "sign_out_confirm_destructive": "Sign Out",
+    "sign_out_queue_warning_title": "Unsynced Scans",
+    "sign_out_queue_warning": "You have unsynced scans that will be lost if you sign out. Sign out anyway?"
+  },
   "common": {
     "loading": "Loading…",
     "error": "An error occurred",

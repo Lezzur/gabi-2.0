@@ -135,6 +135,21 @@
       "company": "Company"
     }
   },
+  "profile": {
+    "title": "Profile",
+    "phone_label": "Numero ng Telepono",
+    "locale_label": "Wika",
+    "locale_en": "Ingles",
+    "locale_tl": "Filipino",
+    "version_label": "Bersyon",
+    "build_label": "Build",
+    "sign_out": "Mag-sign Out",
+    "sign_out_confirm_title": "Mag-sign Out",
+    "sign_out_confirm_body": "Sigurado ka bang gusto mong mag-sign out?",
+    "sign_out_confirm_destructive": "Mag-sign Out",
+    "sign_out_queue_warning_title": "Hindi Pa Na-sync na mga Scan",
+    "sign_out_queue_warning": "Mayroon kang mga scan na hindi pa na-sync at mawawala. Mag-sign out pa rin?"
+  },
   "common": {
     "loading": "Loading…",
     "error": "An error occurred",
