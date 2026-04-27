@@ -122,3 +122,50 @@ export async function flushQueue(
 
   return { flushed, failed, dropped }
 }
+
+/**
+ * Retries a single queued scan by its client id.
+ * Used for manual retry from the history screen.
+ */
+export async function flushSingle(
+  client: SupabaseClient,
+  scanId: string,
+): Promise<{ flushed: number; failed: number; dropped: number }> {
+  const {
+    data: { session },
+  } = await client.auth.getSession()
+
+  if (!session?.access_token) return { flushed: 0, failed: 0, dropped: 0 }
+
+  const queue = await listQueue()
+  const scan = queue.find((s) => s.id === scanId)
+  if (!scan) return { flushed: 0, failed: 0, dropped: 0 }
+
+  const result = await postScan(scan, session.access_token)
+
+  if (result.ok) {
+    await dequeue(scan.id)
+    await appendLog({ scan_id: scan.id, outcome: 'success', timestamp: new Date().toISOString() })
+    return { flushed: 1, failed: 0, dropped: 0 }
+  }
+
+  if (result.terminal) {
+    await dequeue(scan.id)
+    await appendLog({
+      scan_id: scan.id,
+      outcome: 'terminal_error',
+      timestamp: new Date().toISOString(),
+      detail: result.detail,
+    })
+    return { flushed: 0, failed: 0, dropped: 1 }
+  }
+
+  await updateAttempt(scan.id, { error: result.detail })
+  await appendLog({
+    scan_id: scan.id,
+    outcome: 'retryable_error',
+    timestamp: new Date().toISOString(),
+    detail: result.detail,
+  })
+  return { flushed: 0, failed: 1, dropped: 0 }
+}
