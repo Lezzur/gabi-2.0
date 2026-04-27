@@ -633,15 +633,15 @@ phases:
 
           Hardening requirements:
           - The UPDATE...RETURNING MUST be a single statement — no SELECT-then-UPDATE
-          - Wrap wallet credits in a Postgres function (`supabase/migrations/0006_wallet_rpc.sql`) so the wallet delta + wallet_transaction insert + pending record deletion all occur in one transaction
+          - Wrap wallet credits in a Postgres function (`supabase/migrations/0009_wallet_rpc.sql`) so the wallet delta + wallet_transaction insert + pending record deletion all occur in one transaction
           - Return typed discriminated unions matching api-spec §6.1 outcome shapes
           - If SQL error is unique-violation on pending_purchase, treat as idempotent repeat (return existing pending row, don't double-write)
           - Never silently swallow errors — either succeed, return a typed rejection, or throw
           - Log outcome + container UUID prefix + farmer/dealer id — never full QR HMAC, never phone
         expected_files:
           - "apps/crm/lib/scan/claim.ts"
-          - "supabase/migrations/0006_wallet_rpc.sql"
-        done_check: "test -f apps/crm/lib/scan/claim.ts && test -f supabase/migrations/0006_wallet_rpc.sql"
+          - "supabase/migrations/0009_wallet_rpc.sql"
+        done_check: "test -f apps/crm/lib/scan/claim.ts && test -f supabase/migrations/0009_wallet_rpc.sql"
 
       - id: "p3-scan-idempotency"
         name: "Idempotency key store for offline replay"
