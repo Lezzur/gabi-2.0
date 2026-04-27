@@ -11,7 +11,8 @@
     "./schemas": "./dist/schemas/index.js",
     "./constants": "./dist/constants/index.js",
     "./adapters": "./dist/adapters/index.js",
-    "./components/scan-result": "./dist/components/scan-result/index.js"
+    "./components/scan-result": "./dist/components/scan-result/index.js",
+    "./logger": "./dist/logger/index.js"
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
