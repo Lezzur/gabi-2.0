@@ -5,11 +5,11 @@ export default defineConfig({
   test: {
     name: 'crm',
     environment: 'node',
-    include: ['src/**/*.{test,spec}.ts'],
+    include: ['src/**/*.{test,spec}.ts', 'lib/**/*.{test,spec}.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov', 'html'],
-      include: ['src/**'],
+      include: ['src/**', 'lib/**'],
       exclude: ['src/**/*.d.ts'],
       thresholds: {
         lines: 60,
