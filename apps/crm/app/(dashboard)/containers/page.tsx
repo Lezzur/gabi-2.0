@@ -1,5 +1,5 @@
 import { cookies } from "next/headers"
-import { createServerClient } from "@gaia/supabase"
+import { createServerClient, createServiceClient } from "@gaia/supabase"
 import { encodeCursor } from "@/lib/api"
 import ContainersClient from "./_components/ContainersClient"
 
@@ -18,9 +18,9 @@ export interface ContainerListItem {
   id: string
   product_id: string
   product_name: string | null
-  batch_number: string
+  batch_number: string | null
   state: ContainerState
-  manufacture_date: string
+  manufacture_date: string | null
   formulation_expires_at: string | null
   created_at: string
 }
@@ -33,11 +33,12 @@ const LIMIT = 50
 
 export default async function ContainersPage() {
   const cookieStore = cookies()
-  const supabase = createServerClient(cookieStore)
+  const authClient = createServerClient(cookieStore)
+  const supabase = createServiceClient()
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await authClient.auth.getUser()
 
   // Prefer user_role (set by generate route) then fall back to role (auth helper)
   const role =

@@ -35,16 +35,17 @@ export async function middleware(request: NextRequest) {
   }
 
   const supabase = createSupabaseEdgeClient(
-    process.env['SUPABASE_URL'] ?? '',
-    process.env['SUPABASE_ANON_KEY'] ?? '',
+    process.env['NEXT_PUBLIC_SUPABASE_URL'] ?? process.env['SUPABASE_URL'] ?? '',
+    process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] ?? process.env['SUPABASE_ANON_KEY'] ?? '',
     {
       cookies: {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: Array<{ name: string; value: string; options: Record<string, unknown> }>) {
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ;(response.cookies.set as (name: string, value: string, options?: any) => void)(name, value, options)
           })
         },
       },

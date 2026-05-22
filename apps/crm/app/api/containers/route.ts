@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
-import { createServerClient } from '@gaia/supabase'
+import { createServerClient, createServiceClient } from '@gaia/supabase'
 import type { ApiErrorResponse } from '@gaia/shared/types'
 import { checkRateLimit } from '@/lib/rate-limit'
 
@@ -61,12 +61,12 @@ function errResponse(
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const request_id = randomUUID()
-  const supabase = createServerClient(cookies())
+  const authClient = createServerClient(cookies())
 
   const {
     data: { user },
     error: authError,
-  } = await supabase.auth.getUser()
+  } = await authClient.auth.getUser()
   if (authError !== null || user === null) {
     return errResponse(401, 'UNAUTHORIZED', 'Authentication required.', request_id)
   }
@@ -74,6 +74,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!checkRateLimit(`containers:${user.id}`, 30, 60_000)) {
     return errResponse(429, 'RATE_LIMITED', 'Too many requests. Retry after 1 minute.', request_id)
   }
+
+  const supabase = createServiceClient()
 
   const rawParams = Object.fromEntries(request.nextUrl.searchParams)
   const parsed = querySchema.safeParse(rawParams)

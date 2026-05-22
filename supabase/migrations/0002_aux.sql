@@ -129,13 +129,28 @@ CREATE INDEX idx_containers_return_dealer_id ON containers (return_dealer_id);
 -- =============================================================================
 -- pending_purchase — sidecar, NOT a state gate on containers
 -- =============================================================================
+-- lazy_expires_at is set by trigger instead of GENERATED ALWAYS AS because
+-- timestamptz + interval is STABLE (not IMMUTABLE) in PostgreSQL and cannot
+-- be used in a stored generated column expression.
+CREATE OR REPLACE FUNCTION set_lazy_expires_at()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  NEW.lazy_expires_at := NEW.created_at + INTERVAL '60 minutes';
+  RETURN NEW;
+END;
+$$;
+
 CREATE TABLE pending_purchase (
   id               uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   container_id     uuid NOT NULL UNIQUE REFERENCES containers(id) ON DELETE RESTRICT,
   dealer_id        uuid NOT NULL REFERENCES dealer_accounts(id) ON DELETE RESTRICT,
   created_at       timestamptz NOT NULL DEFAULT now(),
-  lazy_expires_at  timestamptz GENERATED ALWAYS AS (created_at + INTERVAL '60 minutes') STORED
+  lazy_expires_at  timestamptz NOT NULL DEFAULT now() + INTERVAL '60 minutes'
 );
+
+CREATE TRIGGER trg_pending_purchase_lazy_expires
+  BEFORE INSERT ON pending_purchase
+  FOR EACH ROW EXECUTE FUNCTION set_lazy_expires_at();
 
 COMMENT ON TABLE pending_purchase IS
   'Sidecar row created when a dealer scans a container to begin a sale. NOT a state gate: the container stays `in_distribution` until the farmer-confirm scan flips it to `purchased`. `lazy_expires_at` is derived (created_at + 60m) and evaluated at read time on every scan path — expired rows are deleted inline (tech-spec §4.3 "lazy cleanup — no cron"). `container_id` UNIQUE prevents two dealers from opening concurrent windows on the same bottle.';
@@ -151,8 +166,12 @@ CREATE TABLE pending_return_reward (
   container_id     uuid NOT NULL UNIQUE REFERENCES containers(id) ON DELETE RESTRICT,
   dealer_id        uuid NOT NULL REFERENCES dealer_accounts(id) ON DELETE RESTRICT,
   created_at       timestamptz NOT NULL DEFAULT now(),
-  lazy_expires_at  timestamptz GENERATED ALWAYS AS (created_at + INTERVAL '60 minutes') STORED
+  lazy_expires_at  timestamptz NOT NULL DEFAULT now() + INTERVAL '60 minutes'
 );
+
+CREATE TRIGGER trg_pending_return_reward_lazy_expires
+  BEFORE INSERT ON pending_return_reward
+  FOR EACH ROW EXECUTE FUNCTION set_lazy_expires_at();
 
 COMMENT ON TABLE pending_return_reward IS
   'Sidecar row created when a dealer processes a container return. Opens a 60-minute window for the farmer-confirm scan that flips the container to `rewards_paid` and credits both wallets. Same lazy-expiry semantics as pending_purchase.';

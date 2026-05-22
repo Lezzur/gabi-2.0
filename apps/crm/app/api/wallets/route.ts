@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { z } from 'zod'
-import { createServerClient } from '@gaia/supabase'
+import { createServerClient, createServiceClient } from '@gaia/supabase'
 import { reqId, errorResponse, encodeCursor, decodeCursor, sanitiseSearch } from '@/lib/api'
 
 const querySchema = z.object({
@@ -15,19 +15,21 @@ export async function GET(request: NextRequest) {
 
   // ── Auth ───────────────────────────────────────────────────────────────────
   const cookieStore = cookies()
-  const supabase = createServerClient(cookieStore)
+  const authClient = createServerClient(cookieStore)
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await authClient.auth.getUser()
 
   if (!user) {
     return errorResponse(401, 'AUTH_REQUIRED', 'i18n:errors.auth_required', rid)
   }
 
-  const role = user.app_metadata?.['user_role'] as string | undefined
+  const role = (user.app_metadata?.['user_role'] ?? user.app_metadata?.['role']) as string | undefined
   if (role !== 'gabs_admin') {
     return errorResponse(403, 'FORBIDDEN', 'i18n:errors.forbidden', rid)
   }
+
+  const supabase = createServiceClient()
 
   // ── Query param validation ─────────────────────────────────────────────────
   const raw = Object.fromEntries(request.nextUrl.searchParams)

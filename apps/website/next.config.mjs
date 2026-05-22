@@ -1,9 +1,10 @@
-import type { NextConfig } from 'next';
+// @ts-check
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   transpilePackages: ['@gaia/shared'],
   experimental: {
     serverActions: {

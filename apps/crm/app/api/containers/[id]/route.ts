@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { randomUUID } from 'node:crypto'
-import { createServerClient } from '@gaia/supabase'
+import { createServerClient, createServiceClient } from '@gaia/supabase'
 import type { ApiErrorResponse } from '@gaia/shared/types'
 
 function errResponse(
@@ -18,16 +18,17 @@ export async function GET(
   { params }: { params: { id: string } },
 ): Promise<NextResponse> {
   const request_id = randomUUID()
-  const supabase = createServerClient(cookies())
+  const authClient = createServerClient(cookies())
 
   const {
     data: { user },
     error: authError,
-  } = await supabase.auth.getUser()
+  } = await authClient.auth.getUser()
   if (authError !== null || user === null) {
     return errResponse(401, 'UNAUTHORIZED', 'Authentication required.', request_id)
   }
 
+  const supabase = createServiceClient()
   const { id } = params
 
   // Fetch container — RLS enforces visibility (admin sees all, dealer/farmer see own).
@@ -48,14 +49,13 @@ export async function GET(
   }
 
   // Run product name and scan history fetches in parallel.
-  const [productResult, scansResult, profileResult] = await Promise.all([
+  const [productResult, scansResult] = await Promise.all([
     supabase.from('products').select('product_name').eq('id', container.product_id).maybeSingle(),
     supabase
       .from('scan_attempts')
       .select('id, step, outcome, actor_type, sync_delayed, created_at')
       .eq('container_id', id)
       .order('created_at', { ascending: true }),
-    supabase.from('user_profiles').select('role').eq('id', user.id).maybeSingle(),
   ])
 
   if (scansResult.error !== null) {
@@ -67,7 +67,8 @@ export async function GET(
     return errResponse(500, 'INTERNAL_ERROR', 'Failed to fetch scan history.', request_id)
   }
 
-  const isAdmin = profileResult.data?.role === 'gabs_admin'
+  const callerRole = (user.app_metadata?.['user_role'] ?? user.app_metadata?.['role'] ?? '') as string
+  const isAdmin = callerRole === 'gabs_admin'
 
   const responseData: Record<string, unknown> = {
     id: container.id,

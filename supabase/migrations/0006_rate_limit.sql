@@ -33,7 +33,7 @@
 
 BEGIN;
 
-CREATE TABLE scan_rate_limits (
+CREATE TABLE IF NOT EXISTS scan_rate_limits (
   uuid              uuid        PRIMARY KEY,
   window_started_at timestamptz NOT NULL,
   invalid_count     integer     NOT NULL CHECK (invalid_count >= 0),
@@ -43,11 +43,13 @@ CREATE TABLE scan_rate_limits (
 
 -- Lookup index for sweeping expired locks (operational cleanup); not required
 -- by the hot read path, which goes straight to the PK.
-CREATE INDEX scan_rate_limits_locked_until_idx
+CREATE INDEX IF NOT EXISTS scan_rate_limits_locked_until_idx
   ON scan_rate_limits (locked_until)
   WHERE locked_until IS NOT NULL;
 
-ALTER TABLE scan_rate_limits ENABLE ROW LEVEL SECURITY;
+DO $$ BEGIN
+  ALTER TABLE scan_rate_limits ENABLE ROW LEVEL SECURITY;
+EXCEPTION WHEN OTHERS THEN NULL; END $$;
 -- No policies declared — service_role only.
 
 -- =============================================================================

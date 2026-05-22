@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { z } from 'zod'
-import { createServerClient } from '@gaia/supabase'
+import { createServerClient, createServiceClient } from '@gaia/supabase'
 import { reqId, errorResponse } from '@/lib/api'
 
 const ALLOWED_ROLES = ['gabs_admin', 'brand_admin'] as const
@@ -155,17 +155,19 @@ function buildPdfBytes(containers: Array<{
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const rid = reqId()
-  const supabase = createServerClient(cookies())
+  const authClient = createServerClient(cookies())
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await authClient.auth.getUser()
   if (!user) return errorResponse(401, 'AUTH_REQUIRED', 'i18n:errors.auth_required', rid)
 
   const userRole = ((user.app_metadata?.['user_role'] ?? user.app_metadata?.['role']) ?? '') as string
   if (!(ALLOWED_ROLES as readonly string[]).includes(userRole)) {
     return errorResponse(403, 'FORBIDDEN', 'i18n:errors.forbidden', rid)
   }
+
+  const supabase = createServiceClient()
 
   let body: z.infer<typeof bodySchema>
   try {
@@ -239,7 +241,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   // PDF
   const pdfBytes = buildPdfBytes(enriched)
 
-  return new NextResponse(pdfBytes, {
+  return new NextResponse(pdfBytes.buffer.slice(pdfBytes.byteOffset, pdfBytes.byteOffset + pdfBytes.byteLength) as ArrayBuffer, {
     status: 200,
     headers: {
       'Content-Type': 'application/pdf',

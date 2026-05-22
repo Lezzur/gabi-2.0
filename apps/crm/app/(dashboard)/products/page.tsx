@@ -1,5 +1,4 @@
-import { cookies } from "next/headers"
-import { createServerClient } from "@gaia/supabase"
+import { createServiceClient } from "@gaia/supabase"
 import { encodeCursor, sanitiseSearch } from "@/lib/api"
 import ProductsClient from "./_components/ProductsClient"
 
@@ -41,8 +40,7 @@ export default async function ProductsPage({
   const category = VALID_CATEGORIES.has(rawCategory) ? (rawCategory as ProductCategory) : undefined
   const search = rawSearch.trim() || undefined
 
-  const cookieStore = cookies()
-  const supabase = createServerClient(cookieStore)
+  const supabase = createServiceClient()
 
   let query = supabase
     .from("products")
