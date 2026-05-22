@@ -149,6 +149,7 @@ export default function ScanScreen() {
       const timer = setTimeout(() => setUiState({ kind: 'idle' }), 3_000)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [uiState.kind])
 
   const handleBarcodeScanned = useCallback(

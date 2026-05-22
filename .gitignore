@@ -12,3 +12,10 @@ coverage/
 playwright-report/
 test-results/
 .env
+
+# build / tooling artifacts
+*.tsbuildinfo
+next-env.d.ts
+expo-env.d.ts
+*.expo-dev.log
+supabase/.temp/

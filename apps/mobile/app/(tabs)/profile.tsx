@@ -67,7 +67,8 @@ export default function ProfileScreen() {
     }
 
     if (session?.user?.id) {
-      const { data: profile } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: profile } = await (supabase as any)
         .from('user_profiles')
         .select('locale')
         .eq('id', session.user.id)
@@ -102,7 +103,8 @@ export default function ProfileScreen() {
       data: { user },
     } = await supabase.auth.getUser()
     if (user) {
-      await supabase.from('user_profiles').update({ locale: next }).eq('id', user.id)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).from('user_profiles').update({ locale: next }).eq('id', user.id)
     }
 
     setLocaleLoading(false)

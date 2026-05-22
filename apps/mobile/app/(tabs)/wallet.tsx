@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
   balanceUnit: {
     fontSize: fontSizes.base,
     color: 'rgba(255,255,255,0.75)',
-    marginBottom: spacing[5],
+    marginBottom: spacing[6],
   },
   redeemButton: {
     backgroundColor: brand.accent,
@@ -694,7 +694,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xl,
     fontWeight: fontWeights.bold,
     color: state.success,
-    marginBottom: spacing[5],
+    marginBottom: spacing[6],
   },
   successCodeBox: {
     width: '100%',

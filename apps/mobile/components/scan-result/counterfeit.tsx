@@ -42,7 +42,7 @@ export default function Counterfeit({ scanId, onDismiss }: Props) {
         if (supported) {
           return Linking.openURL(url);
         }
-        Alert.alert(
+        return Alert.alert(
           'Report Counterfeit',
           `Please contact your dealer or send a report to ${REPORT_EMAIL} with Scan ID: ${scanId}`,
           [{ text: 'OK' }],

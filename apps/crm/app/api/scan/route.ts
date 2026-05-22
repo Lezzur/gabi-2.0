@@ -66,7 +66,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
     const body = parsed.data
-    const { uuid, hmac, step, actor_type, local_scan_ts, last_online_ts, idempotency_key } = body
+    const { uuid, hmac, step, actor_type, last_online_ts, idempotency_key } = body
+    const local_scan_ts = body.local_scan_ts ?? null
 
     // ── 2. Auth ───────────────────────────────────────────────────────────────
     const { data: { user } } = await supabase.auth.getUser()
@@ -96,12 +97,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { uuid, actor_type, actor_user_id: user.id, step, outcome: 'rate_limited', client_ip: clientIp, local_scan_ts },
         service,
       ).catch(() => {})
-      const headers = rl.retryAfterSec
-        ? { 'Retry-After': String(rl.retryAfterSec) }
-        : undefined
       return NextResponse.json(
         { error: { code: 'RATE_LIMITED', message: 'i18n:errors.rate_limited' } },
-        { status: 429, headers },
+        {
+          status: 429,
+          ...(rl.retryAfterSec ? { headers: { 'Retry-After': String(rl.retryAfterSec) } } : {}),
+        },
       )
     }
 
@@ -124,12 +125,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { uuid, actor_type, actor_user_id: user.id, step, outcome: 'hmac_invalid', client_ip: clientIp, local_scan_ts },
         service,
       ).catch(() => {})
-      const headers = rlAfter.locked && rlAfter.retryAfterSec
-        ? { 'Retry-After': String(rlAfter.retryAfterSec) }
-        : undefined
       return NextResponse.json(
         { error: { code: 'INVALID_HMAC', message: 'i18n:errors.invalid_hmac' } },
-        { status: 403, headers },
+        {
+          status: 403,
+          ...(rlAfter.locked && rlAfter.retryAfterSec ? { headers: { 'Retry-After': String(rlAfter.retryAfterSec) } } : {}),
+        },
       )
     }
 

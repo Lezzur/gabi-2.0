@@ -461,7 +461,7 @@ export default function ContainersClient({
 
       const mimeType =
         format === "pdf" ? "application/pdf" : "application/vnd.zebra-zpl"
-      const blob = new Blob(chunks, { type: mimeType })
+      const blob = new Blob(chunks.map((c) => c.buffer.slice(c.byteOffset, c.byteOffset + c.byteLength) as ArrayBuffer), { type: mimeType })
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url

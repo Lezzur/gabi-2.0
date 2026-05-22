@@ -16,8 +16,8 @@ export type CountdownPlatform = 'web' | 'native';
  * SSR contexts).
  */
 export const detectCountdownPlatform = (): CountdownPlatform => {
-  if (typeof window === 'undefined') return 'native';
-  if (typeof requestAnimationFrame === 'undefined') return 'native';
+  if ((globalThis as Record<string, unknown>)['window'] === undefined) return 'native';
+  if ((globalThis as Record<string, unknown>)['requestAnimationFrame'] === undefined) return 'native';
   return 'web';
 };
 

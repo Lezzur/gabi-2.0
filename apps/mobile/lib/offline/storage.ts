@@ -110,7 +110,7 @@ export async function updateAttempt(id: string, result: { error?: string }): Pro
   queue[idx] = {
     ...queue[idx]!,
     attempts: (queue[idx]!.attempts ?? 0) + 1,
-    last_error: result.error,
+    ...(result.error !== undefined ? { last_error: result.error } : {}),
   }
   await writeQueue(queue)
 }

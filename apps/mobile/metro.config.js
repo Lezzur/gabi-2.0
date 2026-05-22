@@ -1,5 +1,6 @@
 const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
+const fs = require('fs');
 
 const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, '../..');
@@ -25,6 +26,25 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
       type: 'sourceFile',
     };
   }
+
+  // @gaia/shared source is authored TS-ESM style with explicit ".js" extensions on
+  // relative imports. Metro doesn't rewrite ".js"→".ts", so resolve those to source.
+  if (
+    moduleName.startsWith('.') &&
+    moduleName.endsWith('.js') &&
+    context.originModulePath.includes(path.join('packages', 'shared'))
+  ) {
+    const base = path.resolve(
+      path.dirname(context.originModulePath),
+      moduleName.slice(0, -'.js'.length),
+    );
+    for (const ext of ['.ts', '.tsx']) {
+      if (fs.existsSync(base + ext)) {
+        return { filePath: base + ext, type: 'sourceFile' };
+      }
+    }
+  }
+
   return context.resolveRequest(context, moduleName, platform);
 };
 

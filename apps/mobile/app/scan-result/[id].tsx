@@ -39,13 +39,13 @@ type Params = {
   id: string;
   outcome: string;
   /** JSON-encoded ScanProductInfo */
-  product: string | undefined;
+  product: string;
   /** ISO-8601 deadline for pending_confirmation */
-  deadline: string | undefined;
-  farmer_points: string | undefined;
-  months_remaining: string | undefined;
+  deadline: string;
+  farmer_points: string;
+  months_remaining: string;
   /** 'purchase' | 'return' — distinguishes success screen copy */
-  step: string | undefined;
+  step: string;
 };
 
 function parseProduct(raw: string | undefined): ScanProductInfo | null {

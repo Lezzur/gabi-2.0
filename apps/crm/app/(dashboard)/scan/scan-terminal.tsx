@@ -193,7 +193,7 @@ export function ScanTerminal() {
           id: crypto.randomUUID(),
           uuid,
           step: scanStep,
-          outcome: "error",
+          outcome: "error" as const,
           code: "NETWORK_ERROR",
           message: "Network error — check connection",
           ts: new Date().toLocaleTimeString(),

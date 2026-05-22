@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
+    "dotenv": "^16.0.0",
     "@types/node": "^20.0.0",
     "@types/pdfkit": "^0.13.9",
     "@types/qrcode": "^1.5.5",

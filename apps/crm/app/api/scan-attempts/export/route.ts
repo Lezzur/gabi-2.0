@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
     return errorResponse(401, 'AUTH_REQUIRED', 'i18n:errors.auth_required', rid)
   }
 
-  const role = (user.app_metadata?.role as string) ?? ''
+  const role = (user.app_metadata?.['user_role'] ?? user.app_metadata?.['role'] ?? '') as string
   if (role !== 'gabs_admin') {
     return errorResponse(403, 'FORBIDDEN', 'i18n:errors.forbidden', rid)
   }
@@ -224,6 +224,7 @@ export async function GET(request: NextRequest) {
           if (rows.length < BATCH_SIZE) break
 
           const last = rows[rows.length - 1]
+          if (!last) break
           lastCreatedAt = last.created_at
           lastId = last.id
         }

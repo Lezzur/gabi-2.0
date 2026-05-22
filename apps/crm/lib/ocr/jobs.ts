@@ -73,7 +73,7 @@ export async function processOcrJob(jobId: string): Promise<void> {
       .from('ocr_jobs')
       .update({
         status: 'failed',
-        error_code: result.error.code,
+        error_code: result.error.kind,
         attempt_count: attempts + 1,
         completed_at: new Date().toISOString(),
       })

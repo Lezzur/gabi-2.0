@@ -178,7 +178,7 @@ export async function parseFpaSpreadsheet(
 
   try {
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(buffer);
+    await workbook.xlsx.load(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer);
 
     // ExcelJS types say non-nullable but returns undefined at runtime if not found
     const sheet = workbook.getWorksheet(SHEET_NAME) as ExcelJS.Worksheet | undefined;

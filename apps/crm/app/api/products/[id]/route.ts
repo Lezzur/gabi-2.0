@@ -110,7 +110,7 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
     return errorResponse(401, 'AUTH_REQUIRED', 'i18n:errors.auth_required', rid)
   }
 
-  const role = (user.app_metadata?.role as string) ?? ''
+  const role = (user.app_metadata?.['user_role'] ?? user.app_metadata?.['role'] ?? '') as string
   if (role !== 'gabs_admin' && role !== 'brand_admin') {
     return errorResponse(403, 'FORBIDDEN', 'i18n:errors.forbidden', rid)
   }

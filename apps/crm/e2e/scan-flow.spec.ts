@@ -139,7 +139,7 @@ const BARCODE_MOCK_SCRIPT = /* js */ `
 /** Arm the mock so the next RAF tick returns this QR payload. */
 async function triggerQr(page: Page, payload: string): Promise<void> {
   await page.evaluate(
-    (p) => { (window as Window & { __qrPending: string | null }).__qrPending = p },
+    (p) => { (window as unknown as { __qrPending: string | null }).__qrPending = p },
     payload,
   )
 }

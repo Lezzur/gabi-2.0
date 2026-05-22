@@ -2,7 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "lib": ["ES2022", "DOM"],
     "outDir": "./dist"
   },
-  "include": ["types/**/*", "tokens/**/*", "i18n/**/*", "schemas/**/*", "constants/**/*", "adapters/**/*", "components/**/*"]
+  "include": ["types/**/*", "tokens/**/*", "i18n/**/*", "schemas/**/*", "constants/**/*", "adapters/**/*", "components/**/*", "logger/**/*"]
 }

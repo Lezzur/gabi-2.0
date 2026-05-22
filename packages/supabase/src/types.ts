@@ -14,6 +14,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      batch_generation_log: {
+        Row: {
+          id: string
+          idempotency_key: string
+          batch_id: string
+          product_id: string
+          quantity: number
+          created_by: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          idempotency_key: string
+          batch_id: string
+          product_id: string
+          quantity: number
+          created_by: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          idempotency_key?: string
+          batch_id?: string
+          product_id?: string
+          quantity?: number
+          created_by?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       config_audit_log: {
         Row: {
           id: string
@@ -37,6 +67,45 @@ export type Database = {
           changed_by?: string
           before?: Record<string, unknown> | null
           after?: Record<string, unknown>
+          created_at?: string
+        }
+        Relationships: []
+      }
+      ocr_jobs: {
+        Row: {
+          id: string
+          user_id: string
+          image_url: string
+          status: 'queued' | 'processing' | 'completed' | 'failed'
+          result: Record<string, unknown> | null
+          error_code: string | null
+          attempt_count: number
+          started_at: string | null
+          completed_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          image_url: string
+          status?: 'queued' | 'processing' | 'completed' | 'failed'
+          result?: Record<string, unknown> | null
+          error_code?: string | null
+          attempt_count?: number
+          started_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          image_url?: string
+          status?: 'queued' | 'processing' | 'completed' | 'failed'
+          result?: Record<string, unknown> | null
+          error_code?: string | null
+          attempt_count?: number
+          started_at?: string | null
+          completed_at?: string | null
           created_at?: string
         }
         Relationships: []
@@ -268,6 +337,8 @@ export type Database = {
           note_to_physician_confirmed_by: string | null
           note_to_physician_confirmed_at: string | null
           label_image_storage_path: string | null
+          creator_id: string | null
+          ocr_job_id: string | null
           created_at: string
           updated_at: string
         }
@@ -302,6 +373,8 @@ export type Database = {
           note_to_physician_confirmed_by?: string | null
           note_to_physician_confirmed_at?: string | null
           label_image_storage_path?: string | null
+          creator_id?: string | null
+          ocr_job_id?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -336,8 +409,37 @@ export type Database = {
           note_to_physician_confirmed_by?: string | null
           note_to_physician_confirmed_at?: string | null
           label_image_storage_path?: string | null
+          creator_id?: string | null
+          ocr_job_id?: string | null
           created_at?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      product_audit_log: {
+        Row: {
+          id: string
+          product_id: string
+          user_id: string
+          action: string
+          ocr_job_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          product_id: string
+          user_id: string
+          action: string
+          ocr_job_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          product_id?: string
+          user_id?: string
+          action?: string
+          ocr_job_id?: string | null
+          created_at?: string
         }
         Relationships: []
       }
@@ -538,7 +640,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      redeem_voucher: {
+        Args: {
+          p_user_id: string
+          p_denomination: Database['public']['Enums']['voucher_denomination']
+        }
+        Returns: Array<{ voucher_code: string; new_balance: number }>
+      }
     }
     Enums: {
       actor_type: 'farmer' | 'dealer' | 'admin'
@@ -555,6 +663,7 @@ export type Database = {
         | 'INSECTICIDE'
         | 'FUNGICIDE'
         | 'RODENTICIDE'
+        | 'MOLLUSCICIDE'
         | 'NEMATICIDE'
         | 'ACARICIDE'
         | 'OTHER'
@@ -568,6 +677,7 @@ export type Database = {
         | 'already_claimed'
         | 'condition_rejected'
         | 'product_draft'
+        | 'rate_limited'
       scan_step: 'purchase_dealer' | 'purchase_farmer' | 'return_dealer' | 'return_farmer'
       toxicity_category: '1' | '2' | '3' | '4'
       voucher_denomination: 'PHP_50' | 'PHP_100' | 'PHP_200' | 'PHP_500'
