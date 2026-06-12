@@ -3,9 +3,9 @@
 export const runtime = 'nodejs'
 
 import { type NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { createServerClient, createServiceClient } from '@gaia/supabase'
+import { createServiceClient } from '@gaia/supabase'
 import { createLogger } from '@gaia/shared/logger'
+import { getRequestUser } from '@/lib/auth/request'
 import { verifyHmac16, getHmacSecret } from '@/lib/scan/hmac'
 import { checkRateLimit, recordInvalidHmac, resetRateLimit } from '@/lib/scan/rate-limit'
 import { parseScanRequest, validateClockBounds } from '@/lib/scan/validate'
@@ -41,8 +41,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     )
   }
 
-  const cookieStore = cookies()
-  const supabase = createServerClient(cookieStore)
   const service = createServiceClient()
   const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? null
 
@@ -69,8 +67,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { uuid, hmac, step, actor_type, last_online_ts, idempotency_key } = body
     const local_scan_ts = body.local_scan_ts ?? null
 
-    // ── 2. Auth ───────────────────────────────────────────────────────────────
-    const { data: { user } } = await supabase.auth.getUser()
+    // ── 2. Auth — session cookie (CRM) or Bearer token (mobile) ──────────────
+    const user = await getRequestUser(request)
     if (!user) {
       await recordScanAttempt(
         { uuid, actor_type, step, outcome: 'auth_required', client_ip: clientIp, local_scan_ts },

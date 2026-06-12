@@ -55,6 +55,19 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
+    if (pathname.startsWith('/api/')) {
+      // API clients (mobile app) authenticate with a Bearer token, which
+      // every route handler validates itself — pass those through. Anything
+      // else gets a JSON 401: an HTML login redirect is wrong for
+      // programmatic clients.
+      if (request.headers.get('authorization')?.toLowerCase().startsWith('bearer ')) {
+        return response
+      }
+      return NextResponse.json(
+        { error: { code: 'AUTH_REQUIRED', message: 'i18n:errors.auth_required' } },
+        { status: 401 },
+      )
+    }
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/login'
     loginUrl.searchParams.set('next', pathname)

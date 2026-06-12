@@ -448,6 +448,10 @@ export type Database = {
           id: number
           farmer_points_per_return: number
           dealer_points_per_return: number
+          voucher_cost_php_50: number
+          voucher_cost_php_100: number
+          voucher_cost_php_200: number
+          voucher_cost_php_500: number
           updated_by: string | null
           updated_at: string
         }
@@ -455,6 +459,10 @@ export type Database = {
           id: number
           farmer_points_per_return?: number
           dealer_points_per_return?: number
+          voucher_cost_php_50?: number
+          voucher_cost_php_100?: number
+          voucher_cost_php_200?: number
+          voucher_cost_php_500?: number
           updated_by?: string | null
           updated_at?: string
         }
@@ -462,6 +470,10 @@ export type Database = {
           id?: number
           farmer_points_per_return?: number
           dealer_points_per_return?: number
+          voucher_cost_php_50?: number
+          voucher_cost_php_100?: number
+          voucher_cost_php_200?: number
+          voucher_cost_php_500?: number
           updated_by?: string | null
           updated_at?: string
         }
@@ -609,7 +621,15 @@ export type Database = {
           scan_attempt_id?: string | null
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'wallet_transactions_scan_attempt_id_fkey'
+            columns: ['scan_attempt_id']
+            isOneToOne: false
+            referencedRelation: 'scan_attempts'
+            referencedColumns: ['id']
+          },
+        ]
       }
       wallets: {
         Row: {
